@@ -1,9 +1,5 @@
 package com.example.testdemo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,6 +19,10 @@ import android.widget.Toast;
 
 import com.example.testdemo.bean.ResultInfo;
 import com.example.testdemo.db.DBHelper;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends Activity {
 
@@ -64,17 +64,6 @@ public class MainActivity extends Activity {
 		srcTextViewresult3.setTextColor(Color.BLUE);
 		initView();
 
-		// KeyboardView keyboardView = (KeyboardView)
-		// findViewById(R.id.keyboardview);
-		// builder = new KeyboardBuilder(this, keyboardView, R.xml.keys_layout);
-		//
-		// builder.registerEditText(input1);
-		// builder.registerEditText(input2);
-		// builder.registerEditText(input3);
-		// builder.registerEditText(srcTextViewfilter1);
-		// builder.registerEditText(srcTextViewfilter2);
-		// builder.registerEditText(srcTextViewfilter3);
-
 	}
 
 	@Override
@@ -88,14 +77,7 @@ public class MainActivity extends Activity {
 
 	KeyboardBuilder builder;
 
-	private void initView() {
-		// TODO Auto-generated method stub
-		src1 = randomNumber(16);
-		src2 = randomNumber(16);
-		src3 = randomNumber(16);
-		// filter1 = randomNumber(16);
-		// filter2 = randomNumber(16);
-		// filter3 = randomNumber(16);
+	private void initList(){
 		thirdList.add(src1[2] + "");
 		if (!thirdList.contains(src2[2])) {
 			thirdList.add(src2[2] + "");
@@ -120,10 +102,43 @@ public class MainActivity extends Activity {
 		if (!eightList.contains(src3[7])) {
 			eightList.add(src3[7] + "");
 		}
+	}
 
-		Log.e("tag--------", "third" + thirdList.toString());
-		Log.e("tag------", "sixList" + sixList.toString());
-		Log.e("tag--------", "eightList" + eightList.toString());
+	private void reflashList(){
+		char[] src1 = srcTextView1.getText().toString().toCharArray();
+		char[] src2 = srcTextView2.getText().toString().toCharArray();
+		char[] src3 = srcTextView3.getText().toString().toCharArray();
+		thirdList.add(src1[2] + "");
+		if (!thirdList.contains(src2[2])) {
+			thirdList.add(src2[2] + "");
+		}
+		if (!thirdList.contains(src3[2])) {
+			thirdList.add(src3[2] + "");
+		}
+
+		sixList.add(src1[5] + "");
+		if (!sixList.contains(src2[5])) {
+			sixList.add(src2[5] + "");
+		}
+		if (!sixList.contains(src3[5])) {
+
+			sixList.add(src3[5] + "");
+		}
+
+		eightList.add(src1[7] + "");
+		if (!eightList.contains(src2[7])) {
+			eightList.add(src2[7] + "");
+		}
+		if (!eightList.contains(src3[7])) {
+			eightList.add(src3[7] + "");
+		}
+	}
+
+	private void initView() {
+		// TODO Auto-generated method stub
+		src1 = randomNumber(16);
+		src2 = randomNumber(16);
+		src3 = randomNumber(16);
 
 		srcTextView1.setText(new String(src1));
 		setHightColor(srcTextView1, 3, 4);
@@ -137,6 +152,12 @@ public class MainActivity extends Activity {
 		setHightColor(srcTextView3, 3, 4);
 		setHightColor(srcTextView3, 7, 8);
 		setHightColor(srcTextView3, 9, 10);
+
+		initList();
+
+		Log.e("tag--------", "third" + thirdList.toString());
+		Log.e("tag------", "sixList" + sixList.toString());
+		Log.e("tag--------", "eightList" + eightList.toString());
 
 		srcTextView1.addTextChangedListener(new TextWatcher() {
 
@@ -354,7 +375,7 @@ public class MainActivity extends Activity {
 						if (!newInput.equals("+") && comStr.contains(newInput)) {
 							s.delete(index - 1, index);
 							Toast.makeText(getApplicationContext(),
-									"不能----" + newInput, 1).show();
+									"不能----" + newInput, Toast.LENGTH_SHORT).show();
 						}
 					}
 				} else {
@@ -516,6 +537,9 @@ public class MainActivity extends Activity {
 	}
 
 	public String getRandomIdNew(int choose) {
+		reflashList();
+
+
 		List<String> list = new ArrayList();
 
 		// 选出第三个，第八个
