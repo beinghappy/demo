@@ -1,0 +1,258 @@
+package com.example.testdemo;
+
+import android.app.Activity;
+import android.inputmethodservice.Keyboard;
+import android.inputmethodservice.KeyboardView;
+import android.text.Editable;
+import android.text.InputType;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+
+
+public class KeyboardBuilder {
+	public final static int CodeDelete   = -5; // Keyboard.KEYCODE_DELETE
+	public final static int CodeCancel   = -3; // Keyboard.KEYCODE_CANCEL
+	public final static int CodeLeft   = 55002; // Keyboard.KEYCODE_CANCEL
+	public final static int CodeRight   = 55003; // Keyboard.KEYCODE_CANCEL
+	private static final String TAG = "KeyboardBuilder";
+	
+	private Activity mActivity;
+	
+	 
+	
+	private KeyboardView mKeyboardView;
+	
+	 
+	
+	public KeyboardBuilder(Activity ac, KeyboardView keyboardView, int keyBoardXmlResId) {
+	
+		mActivity = ac;
+		
+		mKeyboardView = keyboardView;
+		
+		 
+		
+		Keyboard mKeyboard = new Keyboard(mActivity, keyBoardXmlResId);
+		
+		// Attach the keyboard to the view
+		
+		mKeyboardView.setKeyboard(mKeyboard);
+		
+		// Do not show the preview balloons
+		
+		mKeyboardView.setPreviewEnabled(false);
+		
+		 
+		
+		KeyboardView.OnKeyboardActionListener keyboardListener = new KeyboardView.OnKeyboardActionListener() {
+		
+				@Override
+				
+				public void onKey(int primaryCode, int[] keyCodes) {
+			
+					// Get the EditText and its Editable
+			
+					View focusCurrent = mActivity.getWindow().getCurrentFocus();
+					
+					if (focusCurrent == null || !(focusCurrent instanceof EditText)) {
+					
+						return;
+					
+					}
+					
+					 
+					
+					EditText edittext = (EditText) focusCurrent;
+					
+					Editable editable = edittext.getText();
+					
+					int start = edittext.getSelectionStart();
+					
+					 
+					
+					// Handle key
+					
+					if (primaryCode == CodeCancel) {
+					
+						hideCustomKeyboard();
+					
+					} else if (primaryCode == CodeDelete) {
+					
+						if (editable != null && start > 0) {
+							
+							editable.delete(start - 1, start);
+						
+						}
+					
+					} else if (primaryCode == CodeLeft) {
+						
+						if( start>0 ) edittext.setSelection(start - 1);
+						
+					} else if (primaryCode == CodeRight) {
+						
+						if (start < edittext.length()) edittext.setSelection(start + 1);
+						
+					} else {
+					
+						// Insert character
+					
+						editable.insert(start, Character.toString((char) primaryCode));
+					
+					}
+				
+				}
+				
+				 
+				
+				@Override
+				
+				public void onPress(int arg) {
+				
+				}
+				
+				 
+				
+				@Override
+				
+				public void onRelease(int primaryCode) {
+				
+				}
+				
+				 
+				
+				@Override
+				
+				public void onText(CharSequence text) {
+				
+				}
+			
+			 
+			
+				@Override
+				
+				public void swipeDown() {
+				
+				}
+				
+				 
+				
+				@Override
+				
+				public void swipeLeft() {
+				
+				}
+				
+				 
+				
+				@Override
+				
+				public void swipeRight() {
+				
+				}
+			
+			 
+			
+				@Override
+				
+				public void swipeUp() {
+				
+				}
+			
+			};
+		
+		mKeyboardView.setOnKeyboardActionListener(keyboardListener);
+		
+	}
+	
+	 
+	
+	//°ó¶¨Ò»¸öEditText
+	
+	public void registerEditText(EditText editText) {
+	
+	// Make the custom keyboard appear
+	
+		editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+		
+			@Override
+			
+			public void onFocusChange(View v, boolean hasFocus) {
+			
+				if (hasFocus) {
+				
+					showCustomKeyboard(v);
+				
+				} else {
+				
+					hideCustomKeyboard();
+				
+				}
+			
+			}
+		
+		});
+	
+		editText.setOnClickListener(new View.OnClickListener() {
+		
+			@Override
+			
+			public void onClick(View v) {
+			
+				Log.d(TAG, "onClick");
+				showCustomKeyboard(v);
+			
+			}
+		
+		});
+	
+	 
+	
+		editText.setOnTouchListener(new View.OnTouchListener() {
+		
+			@Override
+			
+			public boolean onTouch(View v, MotionEvent event) {
+			
+				Log.d(TAG, "onTouch");
+				
+				 
+				
+				EditText edittext = (EditText) v;
+				
+				int inType = edittext.getInputType();       // Backup the input type
+				
+				edittext.setInputType(InputType.TYPE_NULL); // Disable standard keyboard
+				
+				edittext.onTouchEvent(event);               // Call native handler
+				
+				edittext.setInputType(inType);              // Restore input type
+				
+				edittext.setSelection(edittext.getText().length());
+				 
+				return true;
+			}
+		});
+	}
+	 
+	public void hideCustomKeyboard() {
+		mKeyboardView.setVisibility(View.GONE);
+		mKeyboardView.setEnabled(false);
+	}
+	 
+	public void showCustomKeyboard(View v) {
+		mKeyboardView.setVisibility(View.VISIBLE);
+		mKeyboardView.setEnabled(true);
+	 
+		if (v != null) {
+				((InputMethodManager) mActivity.getSystemService(Activity.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
+		}
+	}
+	 
+	public boolean isCustomKeyboardVisible() {
+		return mKeyboardView.getVisibility() == View.VISIBLE;
+	}
+
+}
