@@ -108,6 +108,10 @@ public class MainActivity extends Activity {
 		char[] src1 = srcTextView1.getText().toString().toCharArray();
 		char[] src2 = srcTextView2.getText().toString().toCharArray();
 		char[] src3 = srcTextView3.getText().toString().toCharArray();
+		thirdList.clear();
+		sixList.clear();
+		eightList.clear();
+
 		thirdList.add(src1[2] + "");
 		if (!thirdList.contains(src2[2])) {
 			thirdList.add(src2[2] + "");
@@ -378,8 +382,6 @@ public class MainActivity extends Activity {
 									"不能----" + newInput, Toast.LENGTH_SHORT).show();
 						}
 					}
-				} else {
-
 				}
 
 			}
