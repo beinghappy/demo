@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -549,21 +550,47 @@ public class MainActivity extends Activity {
 		if (list3.contains(choose)) {
 			list3.remove(choose);
 		}
-		Collections.shuffle(list3);
-		String third = list3.get(0);
+		String third = "" ;
+		if(list3.size() > 0 ){
+			Collections.shuffle(list3);
+			third = list3.get(0);
+		}
 
+		
+		List<String> list6 = sixList;
+		if (list6.contains(choose)) {
+			list6.remove(choose);
+		}
+		if (!TextUtils.isEmpty(third) && list6.contains(third)) {
+			list6.remove(third);
+		}
+		String six = "" ;
+		if(list6.size() > 0 ){
+			Collections.shuffle(list6);
+			six = list6.get(0);
+		}
+		
 		List<String> list8 = eightList;
 		if (list8.contains(choose)) {
 			list8.remove(choose);
 		}
-		if (list8.contains(third)) {
+		if (!TextUtils.isEmpty(third) && list8.contains(third)) {
 			list8.remove(third);
 		}
-		Collections.shuffle(list8);
-		String eight = list8.get(0);
+		if (!TextUtils.isEmpty(six) && list8.contains(six)) {
+			list8.remove(six);
+		}
+		
+		String eight = "" ;
+		if(list8.size() > 0 ){
+			Collections.shuffle(list8);
+			eight = list8.get(0);
+		}
 		for (int i = 0; i < 10; i++) {
-			if (i == choose || i == Integer.parseInt(third)
-					|| i == Integer.parseInt(eight)) {
+			if (i == choose || (!TextUtils.isEmpty(third) && i == Integer.parseInt(third))
+					|| (!TextUtils.isEmpty(six)  && i == Integer.parseInt(six))
+					|| (!TextUtils.isEmpty(eight)  && i == Integer.parseInt(eight))
+					) {
 
 			} else {
 				list.add("" + i);
@@ -571,18 +598,22 @@ public class MainActivity extends Activity {
 
 		}
 
-		Log.e("tag---third---", third);
-		Log.e("tag---eight---", eight);
 		Log.e("tag---1---", list.toString());
 		Collections.shuffle(list);
-		Log.e("tag---2 shuffle---", list.toString());
 		list.add(0, choose + "");
-		Log.e("tag---add choose---", list.toString());
-		//
+		if(!TextUtils.isEmpty(third)){
 			list.add(2, third);
-		Log.e("tag---add 2---", list.toString());
+		}
+		
+		if(!TextUtils.isEmpty(six)){
+			list.add(5, six);
+		}
+		
+		if(!TextUtils.isEmpty(eight)){
 			list.add(7, eight);
-		Log.e("tag---add 7---", list.toString());
+		}
+		
+		
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < list.size(); i++) {
 			sb.append(list.get(i));
