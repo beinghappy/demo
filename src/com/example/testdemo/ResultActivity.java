@@ -6,18 +6,22 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.testdemo.bean.ResultInfo;
@@ -33,9 +37,8 @@ import com.example.testdemo.db.DBHelper;
 
 	ListView mListView;
 	DBHelper mDbHelper;
-	ArrayAdapter<String> mAdapter;
+	MyAdapter mAdapter;
 	List<ResultInfo> resultInfoList = null;
-	List<String> dataList = null;
 	String account = null;
 	String ResultInfo = null;
 
@@ -61,24 +64,7 @@ import com.example.testdemo.db.DBHelper;
 
 		mDbHelper = new DBHelper(this);
 		resultInfoList = mDbHelper.getResultInfos();
-		dataList = new ArrayList<String>();
-		if (resultInfoList != null && resultInfoList.size() > 0) {
-			for (ResultInfo mResultInfo : resultInfoList) {
-				dataList.add(mResultInfo.getResult());
-			}
-		}
-		
-		initListView(dataList);
-		mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
-
-			@Override
-			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
-				// TODO Auto-generated method stub
-				showEditDialog(dataList.get(arg2), arg2);
-				return false;
-			}
-		});
+		initListView(resultInfoList);
 
 	}
 	
@@ -92,20 +78,28 @@ import com.example.testdemo.db.DBHelper;
         return super.onOptionsItemSelected(item);
     }
 	
-	public void initListView(List<String> list){
-		mAdapter = new ArrayAdapter<String>(getApplicationContext(),
-				R.layout.textview_item, list);
+	public void initListView(final List<ResultInfo> list){
+		mAdapter = new MyAdapter(this, list);
 		mListView.setAdapter(mAdapter);
+		mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				// TODO Auto-generated method stub
+				showEditDialog(list.get(arg2), arg2);
+				return false;
+			}
+		});
 	}
 
 	EditText mEditText;
-
-	public void showEditDialog(String text, final int index) {
+	public void showEditDialog(final ResultInfo info, final int index) {
 		AlertDialog.Builder mBuilder = new AlertDialog.Builder(this);
 		mBuilder.setTitle("编辑结果");
 		mBuilder.setIcon(android.R.drawable.ic_dialog_info);
 		mEditText = new EditText(this);
-		mEditText.setText(text);
+		mEditText.setText(info.getResult());
 		mBuilder.setView(mEditText);
 		mBuilder.setPositiveButton("确定", new OnClickListener() {
 
@@ -118,22 +112,19 @@ import com.example.testdemo.db.DBHelper;
 				} else {
 					ResultInfo mInfo = new ResultInfo();
 					mInfo.setResult(mEditText.getText().toString());
-					mInfo.setTime(resultInfoList.get(index).getTime());
+					mInfo.setTime(info.getTime());
 					boolean b = mDbHelper.updateResult(mInfo);
 					if (b) {
 						Toast.makeText(getApplicationContext(), "edit",
 								Toast.LENGTH_LONG).show();
 						resultInfoList = mDbHelper.getResultInfos();
-						dataList = new ArrayList<String>();
-						if (resultInfoList != null && resultInfoList.size() > 0) {
-							for (ResultInfo mResultInfo : resultInfoList) {
-								dataList.add(mResultInfo.getResult());
-							}
-						}
-						mAdapter = new ArrayAdapter<String>(
-								getApplicationContext(),
-								R.layout.textview_item, dataList);
-						mListView.setAdapter(mAdapter);
+						List<ResultInfo> obj = searchItem(searchText);
+						initListView(obj);
+						
+//						mAdapter = new ArrayAdapter<String>(
+//								getApplicationContext(),
+//								R.layout.textview_item, dataList);
+//						mListView.setAdapter(mAdapter);
 					} else {
 						Toast.makeText(getApplicationContext(), "edit fail",
 								Toast.LENGTH_LONG).show();
@@ -157,21 +148,27 @@ import com.example.testdemo.db.DBHelper;
 	 * 用户输入字符时激发该方法
 	 */
 
+	String searchText = "";
 	@Override
 	public boolean onQueryTextChange(String newText) {
-		List<String> obj = searchItem(newText);
+		List<ResultInfo> obj = searchItem(newText);
 		initListView(obj);
 		return false;
 	}
 	
 
-	public List<String> searchItem(String name) {
-		List<String> mSearchList = new ArrayList<String>();
-		for (int i = 0; i < dataList.size(); i++) {
-			int index = dataList.get(i).indexOf(name);
+	public List<ResultInfo> searchItem(String name) {
+		searchText = name;
+		if(TextUtils.isEmpty(name)){
+			return resultInfoList;
+		}
+		
+		List<ResultInfo> mSearchList = new ArrayList<ResultInfo>();
+		for (int i = 0; i < resultInfoList.size(); i++) {
+			int index = resultInfoList.get(i).getResult().indexOf(name);
 			// 存在匹配的数据
 			if (index != -1) {
-				mSearchList.add(dataList.get(i));
+				mSearchList.add(resultInfoList.get(i));
 			}
 		}
 		return mSearchList;
@@ -188,23 +185,49 @@ import com.example.testdemo.db.DBHelper;
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
-//		super.onBackPressed();
-//		finish();
 		if (srv1.isShown()){
-//			srv1.onActionViewCollapsed();  
-//			srv1.setQuery("",false);
 			ResultActivity.this.finish();
         } else{
             super.onBackPressed();
         }
 	}
 	
-//	if (searchView.isShown()){
-//        searchView.onActionViewCollapsed();  //collapse your ActionView
-//        searchView.setQuery("",false);       //clears your query without submit
-//        isClosed = true;                     //needed to handle closed by back
-//    } else{
-//        super.onBackPressed();
-//    }
+	class MyAdapter extends BaseAdapter{
+		private Context context;
+		private List<ResultInfo> list;
+		public MyAdapter(Context context , List<ResultInfo> list){
+			this.context = context;
+			this.list = list;
+		}
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return list.size();
+		}
+
+		@Override
+		public ResultInfo getItem(int arg0) {
+			// TODO Auto-generated method stub
+			return list.get(arg0);
+		}
+
+		@Override
+		public long getItemId(int arg0) {
+			// TODO Auto-generated method stub
+			return arg0;
+		}
+
+		@Override
+		public View getView(int arg0, View arg1, ViewGroup arg2) {
+			// TODO Auto-generated method stub
+			TextView tv = new TextView(context);
+			tv.setText(list.get(arg0).getResult());
+			return tv;
+		}
+		
+	}
+	
+	
 
 }
