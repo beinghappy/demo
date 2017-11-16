@@ -28,9 +28,9 @@ import java.util.List;
 public class MainActivity extends Activity {
 
 	EditText srcTextView1, srcTextView2, srcTextView3;
-	EditText srcTextViewfilter1;
-	EditText srcTextViewfilter2;
-	EditText srcTextViewfilter3;
+	EditText srcEditTextfilter1;
+	EditText srcEditTextfilter2;
+	EditText srcEditTextfilter3;
 	EditText input1;
 	EditText input2;
 	EditText input3;
@@ -51,13 +51,13 @@ public class MainActivity extends Activity {
 		input2 = (EditText) findViewById(R.id.result_input2);
 		input3 = (EditText) findViewById(R.id.result_input3);
 
-		srcTextViewfilter1 = (EditText) findViewById(R.id.textView_fiter1);
+		srcEditTextfilter1 = (EditText) findViewById(R.id.textView_fiter1);
 		srcTextViewresult1 = (TextView) findViewById(R.id.textView_result1);
 
-		srcTextViewfilter2 = (EditText) findViewById(R.id.textView_fiter2);
+		srcEditTextfilter2 = (EditText) findViewById(R.id.textView_fiter2);
 		srcTextViewresult2 = (TextView) findViewById(R.id.textView_result2);
 
-		srcTextViewfilter3 = (EditText) findViewById(R.id.textView_fiter3);
+		srcEditTextfilter3 = (EditText) findViewById(R.id.textView_fiter3);
 		srcTextViewresult3 = (TextView) findViewById(R.id.textView_result3);
 
 		srcTextViewresult1.setTextColor(Color.BLUE);
@@ -252,7 +252,7 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		srcTextViewfilter1.addTextChangedListener(new TextWatcher() {
+		srcEditTextfilter1.addTextChangedListener(new TextWatcher() {
 
 			String tmp = "";
 			boolean check = true;
@@ -272,13 +272,13 @@ public class MainActivity extends Activity {
 				int len = s.toString().length();
 				// add it on 20170106
 				if (!toDelete && len == 1) {
-					String tmp = srcTextViewfilter1.getText().toString();
+					String tmp = srcEditTextfilter1.getText().toString();
 					int choose = Integer.parseInt(tmp);
 					String head = getRandomIdNew(choose);
 					String text = head + head.substring(0, 6);
-					// srcTextViewfilter1.setText(text);
-					// srcTextViewfilter2.setText(text);
-					// srcTextViewfilter3.setText(text);
+					// srcEditTextfilter1.setText(text);
+					// srcEditTextfilter2.setText(text);
+					// srcEditTextfilter3.setText(text);
 
 					String check1 = srcTextView1.getText().toString()
 							.substring(0, 1);
@@ -294,7 +294,7 @@ public class MainActivity extends Activity {
 
 					if (!tmp.isEmpty()) {
 						if (checkList.contains(tmp)) {
-							srcTextViewfilter1.setText(text);
+							srcEditTextfilter1.setText(text);
 							checkList.remove(tmp);
 							for (int i = 0; i < checkList.size(); i++) {
 								int index = head.indexOf(checkList.get(i));
@@ -302,43 +302,43 @@ public class MainActivity extends Activity {
 										+ head.substring(0, index);
 								String text2 = head2 + head2.substring(0, 6);
 								if (i == 0) {
-									srcTextViewfilter2.setText(text2);
+									srcEditTextfilter2.setText(text2);
 								} else {
-									srcTextViewfilter3.setText(text2);
+									srcEditTextfilter3.setText(text2);
 								}
 							}
 
 							doResultDirect();
 
 						} else {
-							srcTextViewfilter1.setText(text);
-							srcTextViewfilter2.setText(text);
-							srcTextViewfilter3.setText(text);
+							srcEditTextfilter1.setText(text);
+							srcEditTextfilter2.setText(text);
+							srcEditTextfilter3.setText(text);
 						}
 					}
 
 				}
 
 				if (!toDelete && len == 10) {
-					String tmp = srcTextViewfilter1.getText().toString();
+					String tmp = srcEditTextfilter1.getText().toString();
 					String text = s.toString() + tmp.substring(0, 6);
-					srcTextViewfilter1.setText(text);
-					// srcTextViewfilter2.setText(text);
-					// srcTextViewfilter3.setText(text);
+					srcEditTextfilter1.setText(text);
+					// srcEditTextfilter2.setText(text);
+					// srcEditTextfilter3.setText(text);
 				}
 
-				if (srcTextViewfilter1.length() >= 10) {
-					input1.setText(srcTextViewfilter1.getText().toString()
+				if (srcEditTextfilter1.length() >= 10) {
+					input1.setText(srcEditTextfilter1.getText().toString()
 							.substring(9, 10));
 				}
 
-				if (srcTextViewfilter2.length() >= 10) {
-					input2.setText(srcTextViewfilter2.getText().toString()
+				if (srcEditTextfilter2.length() >= 10) {
+					input2.setText(srcEditTextfilter2.getText().toString()
 							.substring(9, 10));
 				}
 
-				if (srcTextViewfilter3.length() >= 10) {
-					input3.setText(srcTextViewfilter3.getText().toString()
+				if (srcEditTextfilter3.length() >= 10) {
+					input3.setText(srcEditTextfilter3.getText().toString()
 							.substring(9, 10));
 				}
 
@@ -363,14 +363,14 @@ public class MainActivity extends Activity {
 				boolean enlarger = s.length() > tmp.length() ? true : false;
 				Log.e("tag", "after =s.toString()= " + s.toString());
 				if (enlarger) {
-					int index = srcTextViewfilter1.getSelectionStart();
+					int index = srcEditTextfilter1.getSelectionStart();
 					Log.e("tag", "after =index= " + index);
 					if (index > 0 && index <= 10) {
 						newInput = s.toString().substring(index - 1, index);
 						Log.e("tag", "after =newInput= " + newInput);
 
 						String comStr;
-						if (srcTextViewfilter1.getText().length() > 10) {
+						if (srcEditTextfilter1.getText().length() > 10) {
 							comStr = tmp.substring(0, 10);
 							Log.e("tag", "after =comStr= " + comStr);
 						} else {
@@ -388,7 +388,7 @@ public class MainActivity extends Activity {
 			}
 
 		});
-		srcTextViewfilter2.addTextChangedListener(new TextWatcher() {
+		srcEditTextfilter2.addTextChangedListener(new TextWatcher() {
 
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
@@ -405,28 +405,28 @@ public class MainActivity extends Activity {
 					int len = s.length();
 					// add it on 20170106
 					// if(len == 1){
-					// String tmp = srcTextViewfilter2.getText().toString();
+					// String tmp = srcEditTextfilter2.getText().toString();
 					// int choose = Integer.parseInt(tmp);
 					// String head = getRandomId(choose);
 					// String text = head + head.substring(0, 6);
-					// srcTextViewfilter2.setText(text);
+					// srcEditTextfilter2.setText(text);
 					// }
 
 					if (len == 10) {
-						String tmp = srcTextViewfilter2.getText().toString();
+						String tmp = srcEditTextfilter2.getText().toString();
 						String text = s.toString() + tmp.substring(0, 6);
-						srcTextViewfilter2.setText(text);
+						srcEditTextfilter2.setText(text);
 
-						// setHightColor(srcTextViewfilter1, 3, 4);
-						// setHightColor(srcTextViewfilter1, 7, 8);
-						// setHightColor(srcTextViewfilter1, 9, 10);
+						// setHightColor(srcEditTextfilter1, 3, 4);
+						// setHightColor(srcEditTextfilter1, 7, 8);
+						// setHightColor(srcEditTextfilter1, 9, 10);
 
 					}
 				}
 				Log.i("tag", "输入文字" + s + "中的状态，" + count + ",start==" + start
 						+ ",before == " + before);
-				if (srcTextViewfilter2.length() >= 10) {
-					input2.setText(srcTextViewfilter2.getText().toString()
+				if (srcEditTextfilter2.length() >= 10) {
+					input2.setText(srcEditTextfilter2.getText().toString()
 							.substring(9, 10));
 				}
 			}
@@ -438,7 +438,7 @@ public class MainActivity extends Activity {
 			}
 
 		});
-		srcTextViewfilter3.addTextChangedListener(new TextWatcher() {
+		srcEditTextfilter3.addTextChangedListener(new TextWatcher() {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
@@ -448,27 +448,27 @@ public class MainActivity extends Activity {
 						+ ",before == " + before);
 				if (s.length() > 0) {
 					// add it on 20170106
-					// if(srcTextViewfilter3.getText().length() == 1){
-					// String tmp = srcTextViewfilter3.getText().toString();
+					// if(srcEditTextfilter3.getText().length() == 1){
+					// String tmp = srcEditTextfilter3.getText().toString();
 					// int choose = Integer.parseInt(tmp);
 					// String head = getRandomId(choose);
 					// String text = head + head.substring(0, 6);
-					// srcTextViewfilter3.setText(text);
+					// srcEditTextfilter3.setText(text);
 					// }
 
-					if (srcTextViewfilter3.getText().length() == 10) {
-						String tmp = srcTextViewfilter3.getText().toString();
+					if (srcEditTextfilter3.getText().length() == 10) {
+						String tmp = srcEditTextfilter3.getText().toString();
 						String text = s.toString() + tmp.substring(0, 6);
-						srcTextViewfilter3.setText(text);
-						// setHightColor(srcTextViewfilter3, 3, 4);
-						// setHightColor(srcTextViewfilter3, 7, 8);
-						// setHightColor(srcTextViewfilter3, 9, 10);
+						srcEditTextfilter3.setText(text);
+						// setHightColor(srcEditTextfilter3, 3, 4);
+						// setHightColor(srcEditTextfilter3, 7, 8);
+						// setHightColor(srcEditTextfilter3, 9, 10);
 
 					}
 				}
 
-				if (srcTextViewfilter3.length() >= 10) {
-					input3.setText(srcTextViewfilter3.getText().toString()
+				if (srcEditTextfilter3.length() >= 10) {
+					input3.setText(srcEditTextfilter3.getText().toString()
 							.substring(9, 10));
 				}
 			}
@@ -675,20 +675,20 @@ public class MainActivity extends Activity {
 	}
 
 	public void doClear() {
-		srcTextViewfilter3.setText("");
-		srcTextViewfilter2.setText("");
-		srcTextViewfilter1.setText("");
+		srcEditTextfilter3.setText("");
+		srcEditTextfilter2.setText("");
+		srcEditTextfilter1.setText("");
 	}
 
 	public void doResult() {
 		src1 = srcTextView1.getText().toString().toCharArray();
 		src2 = srcTextView2.getText().toString().toCharArray();
 		src3 = srcTextView3.getText().toString().toCharArray();
-		char[] filter1 = getResulString(srcTextViewfilter1.getText().toString()
+		char[] filter1 = getResulString(srcEditTextfilter1.getText().toString()
 				.toCharArray());
-		char[] filter2 = getResulString(srcTextViewfilter2.getText().toString()
+		char[] filter2 = getResulString(srcEditTextfilter2.getText().toString()
 				.toCharArray());
-		char[] filter3 = getResulString(srcTextViewfilter3.getText().toString()
+		char[] filter3 = getResulString(srcEditTextfilter3.getText().toString()
 				.toCharArray());
 		String[] tmp = dealresult(filter1, filter2, filter3);
 		srcTextViewresult1.setText(tmp[0]);
@@ -723,9 +723,9 @@ public class MainActivity extends Activity {
 			mResultInfo.setTime(System.currentTimeMillis());
 			new DBHelper(this).addUserInfo(mResultInfo);
 
-			srcTextViewfilter3.setText("");
-			srcTextViewfilter2.setText("");
-			srcTextViewfilter1.setText("");
+			srcEditTextfilter3.setText("");
+			srcEditTextfilter2.setText("");
+			srcEditTextfilter1.setText("");
 
 		} else {
 			Toast.makeText(getApplicationContext(), "不能为空", Toast.LENGTH_LONG)
@@ -738,11 +738,11 @@ public class MainActivity extends Activity {
 		src1 = srcTextView1.getText().toString().toCharArray();
 		src2 = srcTextView2.getText().toString().toCharArray();
 		src3 = srcTextView3.getText().toString().toCharArray();
-		char[] filter1 = getResulString(srcTextViewfilter1.getText().toString()
+		char[] filter1 = getResulString(srcEditTextfilter1.getText().toString()
 				.toCharArray());
-		char[] filter2 = getResulString(srcTextViewfilter2.getText().toString()
+		char[] filter2 = getResulString(srcEditTextfilter2.getText().toString()
 				.toCharArray());
-		char[] filter3 = getResulString(srcTextViewfilter3.getText().toString()
+		char[] filter3 = getResulString(srcEditTextfilter3.getText().toString()
 				.toCharArray());
 		String[] tmp = dealresult(filter1, filter2, filter3);
 		srcTextViewresult1.setText(tmp[0]);
@@ -826,6 +826,11 @@ public class MainActivity extends Activity {
 			}
 		}
 
+		if(result[0]=='0'){
+			result[0] = '1';
+		}
+
+		Log.e("tag","result == "+result.toString());
 		return result;
 
 	}
