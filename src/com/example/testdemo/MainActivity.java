@@ -557,18 +557,18 @@ public class MainActivity extends Activity {
 		}
 
 		
-		List<String> list6 = sixList;
-		if (list6.contains(choose)) {
-			list6.remove(choose);
-		}
-		if (!TextUtils.isEmpty(third) && list6.contains(third)) {
-			list6.remove(third);
-		}
-		String six = "" ;
-		if(list6.size() > 0 ){
-			Collections.shuffle(list6);
-			six = list6.get(0);
-		}
+//		List<String> list6 = sixList;
+//		if (list6.contains(choose)) {
+//			list6.remove(choose);
+//		}
+//		if (!TextUtils.isEmpty(third) && list6.contains(third)) {
+//			list6.remove(third);
+//		}
+//		String six = "" ;
+//		if(list6.size() > 0 ){
+//			Collections.shuffle(list6);
+//			six = list6.get(0);
+//		}
 		
 		List<String> list8 = eightList;
 		if (list8.contains(choose)) {
@@ -577,9 +577,9 @@ public class MainActivity extends Activity {
 		if (!TextUtils.isEmpty(third) && list8.contains(third)) {
 			list8.remove(third);
 		}
-		if (!TextUtils.isEmpty(six) && list8.contains(six)) {
-			list8.remove(six);
-		}
+//		if (!TextUtils.isEmpty(six) && list8.contains(six)) {
+//			list8.remove(six);
+//		}
 		
 		String eight = "" ;
 		if(list8.size() > 0 ){
@@ -588,7 +588,7 @@ public class MainActivity extends Activity {
 		}
 		for (int i = 0; i < 10; i++) {
 			if (i == choose || (!TextUtils.isEmpty(third) && i == Integer.parseInt(third))
-					|| (!TextUtils.isEmpty(six)  && i == Integer.parseInt(six))
+//					|| (!TextUtils.isEmpty(six)  && i == Integer.parseInt(six))
 					|| (!TextUtils.isEmpty(eight)  && i == Integer.parseInt(eight))
 					) {
 
@@ -605,9 +605,9 @@ public class MainActivity extends Activity {
 			list.add(2, third);
 		}
 		
-		if(!TextUtils.isEmpty(six)){
-			list.add(5, six);
-		}
+//		if(!TextUtils.isEmpty(six)){
+//			list.add(5, six);
+//		}
 		
 		if(!TextUtils.isEmpty(eight)){
 			list.add(7, eight);

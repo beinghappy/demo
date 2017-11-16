@@ -222,6 +222,7 @@ import com.example.testdemo.db.DBHelper;
 		public View getView(int arg0, View arg1, ViewGroup arg2) {
 			// TODO Auto-generated method stub
 			TextView tv = new TextView(context);
+			tv.setTextSize(20);
 			tv.setText(list.get(arg0).getResult());
 			return tv;
 		}
