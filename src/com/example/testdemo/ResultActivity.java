@@ -161,15 +161,31 @@ import java.util.List;
 		if(TextUtils.isEmpty(name)){
 			return resultInfoList;
 		}
-
 		List<ResultInfo> mSearchList = new ArrayList<ResultInfo>();
-		for (int i = 0; i < resultInfoList.size(); i++) {
-			int index = resultInfoList.get(i).getResult().indexOf(name);
-			// 存在匹配的数据
-			if (index != -1) {
-				mSearchList.add(resultInfoList.get(i));
+		String[] hello = new String[2];
+		if(name.trim().indexOf(" ") > 0){
+			hello = name.split(" ");
+
+			for (int i = 0; i < resultInfoList.size(); i++) {
+				int index = resultInfoList.get(i).getResult().indexOf(hello[0]);
+				int index2 = resultInfoList.get(i).getResult().indexOf(hello[1]);
+				// 存在匹配的数据
+				if (index != -1 || index2!= -1) {
+					mSearchList.add(resultInfoList.get(i));
+				}
+			}
+
+		}else{
+			for (int i = 0; i < resultInfoList.size(); i++) {
+				int index = resultInfoList.get(i).getResult().indexOf(name);
+				// 存在匹配的数据
+				if (index != -1) {
+					mSearchList.add(resultInfoList.get(i));
+				}
 			}
 		}
+
+
 		return mSearchList;
 	}
 
