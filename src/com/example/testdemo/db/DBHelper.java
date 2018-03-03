@@ -1,6 +1,4 @@
 package com.example.testdemo.db;
-import java.util.List;
-
 import android.content.Context;
 
 import com.example.testdemo.bean.ResultInfo;
@@ -9,6 +7,8 @@ import com.lidroid.xutils.DbUtils.DbUpgradeListener;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
+
+import java.util.List;
 
 public class DBHelper {
 
@@ -26,7 +26,6 @@ public class DBHelper {
 	}
 
 	/**
-	 * ÃÌº””√ªß
 	 * @param mUserInfo
 	 * @return
 	 */
@@ -41,7 +40,6 @@ public class DBHelper {
 	}
 	
 	/**
-	 * @param mInfo
 	 * @return
 	 */
 	public List<ResultInfo> getResultInfos(){

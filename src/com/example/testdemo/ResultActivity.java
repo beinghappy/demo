@@ -1,8 +1,5 @@
 package com.example.testdemo;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -27,10 +23,13 @@ import android.widget.Toast;
 import com.example.testdemo.bean.ResultInfo;
 import com.example.testdemo.db.DBHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * 
+ *
  * @author 123
- * 
+ *
  */
 @SuppressLint("NewApi") public class ResultActivity extends Activity implements
 		SearchView.OnQueryTextListener {
@@ -52,14 +51,14 @@ import com.example.testdemo.db.DBHelper;
 
 		srv1 = (SearchView) findViewById(R.id.searchview);
 		srv1.setOnQueryTextListener(this);
-		
+
 		srv1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-		    @Override
-		    public void onFocusChange(View view, boolean queryTextFocused) {
-		        if(!queryTextFocused) {
-		            srv1.setQuery("", false);
-		        }
-		    }
+			@Override
+			public void onFocusChange(View view, boolean queryTextFocused) {
+				if(!queryTextFocused) {
+					srv1.setQuery("", false);
+				}
+			}
 		});
 
 		mDbHelper = new DBHelper(this);
@@ -67,17 +66,17 @@ import com.example.testdemo.db.DBHelper;
 		initListView(resultInfoList);
 
 	}
-	
+
 	@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-	
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				finish();
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 	public void initListView(final List<ResultInfo> list){
 		mAdapter = new MyAdapter(this, list);
 		mListView.setAdapter(mAdapter);
@@ -85,7 +84,7 @@ import com.example.testdemo.db.DBHelper;
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
+										   int arg2, long arg3) {
 				// TODO Auto-generated method stub
 				showEditDialog(list.get(arg2), arg2);
 				return false;
@@ -96,18 +95,18 @@ import com.example.testdemo.db.DBHelper;
 	EditText mEditText;
 	public void showEditDialog(final ResultInfo info, final int index) {
 		AlertDialog.Builder mBuilder = new AlertDialog.Builder(this);
-		mBuilder.setTitle("±‡º≠Ω·π˚");
+		mBuilder.setTitle("ÁºñËæëÁªìÊûú");
 		mBuilder.setIcon(android.R.drawable.ic_dialog_info);
 		mEditText = new EditText(this);
 		mEditText.setText(info.getResult());
 		mBuilder.setView(mEditText);
-		mBuilder.setPositiveButton("»∑∂®", new OnClickListener() {
+		mBuilder.setPositiveButton("Á°ÆÂÆö", new OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface arg0, int id) {
 				// TODO Auto-generated method stub
 				if (TextUtils.isEmpty(mEditText.getText().toString())) {
-					Toast.makeText(getApplicationContext(), "–ﬁ∏ƒ≤ªƒ‹Œ™ø’",
+					Toast.makeText(getApplicationContext(), "‰øÆÊîπ‰∏çËÉΩ‰∏∫Á©∫",
 							Toast.LENGTH_LONG).show();
 				} else {
 					ResultInfo mInfo = new ResultInfo();
@@ -120,7 +119,7 @@ import com.example.testdemo.db.DBHelper;
 						resultInfoList = mDbHelper.getResultInfos();
 						List<ResultInfo> obj = searchItem(searchText);
 						initListView(obj);
-						
+
 //						mAdapter = new ArrayAdapter<String>(
 //								getApplicationContext(),
 //								R.layout.textview_item, dataList);
@@ -132,7 +131,7 @@ import com.example.testdemo.db.DBHelper;
 				}
 			}
 		});
-		mBuilder.setNegativeButton("»°œ˚", new OnClickListener() {
+		mBuilder.setNegativeButton("ÂèñÊ∂à", new OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {
@@ -145,7 +144,7 @@ import com.example.testdemo.db.DBHelper;
 	}
 
 	/**
-	 * ”√ªß ‰»Î◊÷∑˚ ±º§∑¢∏√∑Ω∑®
+	 * Áî®Êà∑ËæìÂÖ•Â≠óÁ¨¶Êó∂ÊøÄÂèëËØ•ÊñπÊ≥ï
 	 */
 
 	String searchText = "";
@@ -155,18 +154,18 @@ import com.example.testdemo.db.DBHelper;
 		initListView(obj);
 		return false;
 	}
-	
+
 
 	public List<ResultInfo> searchItem(String name) {
 		searchText = name;
 		if(TextUtils.isEmpty(name)){
 			return resultInfoList;
 		}
-		
+
 		List<ResultInfo> mSearchList = new ArrayList<ResultInfo>();
 		for (int i = 0; i < resultInfoList.size(); i++) {
 			int index = resultInfoList.get(i).getResult().indexOf(name);
-			// ¥Ê‘⁄∆•≈‰µƒ ˝æ›
+			// Â≠òÂú®ÂåπÈÖçÁöÑÊï∞ÊçÆ
 			if (index != -1) {
 				mSearchList.add(resultInfoList.get(i));
 			}
@@ -175,23 +174,23 @@ import com.example.testdemo.db.DBHelper;
 	}
 
 	/**
-	 * µ•ª˜À—À˜∞¥≈• ±º§∑¢∏√∑Ω∑®
+	 * ÂçïÂáªÊêúÁ¥¢ÊåâÈíÆÊó∂ÊøÄÂèëËØ•ÊñπÊ≥ï
 	 */
 	@Override
 	public boolean onQueryTextSubmit(String query) {
 		return false;
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		if (srv1.isShown()){
 			ResultActivity.this.finish();
-        } else{
-            super.onBackPressed();
-        }
+		} else{
+			super.onBackPressed();
+		}
 	}
-	
+
 	class MyAdapter extends BaseAdapter{
 		private Context context;
 		private List<ResultInfo> list;
@@ -203,13 +202,13 @@ import com.example.testdemo.db.DBHelper;
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return list.size();
+			return list!=null ? list.size() : 0;
 		}
 
 		@Override
 		public ResultInfo getItem(int arg0) {
 			// TODO Auto-generated method stub
-			return list.get(arg0);
+			return list!=null ? list.get(arg0):null;
 		}
 
 		@Override
@@ -226,9 +225,9 @@ import com.example.testdemo.db.DBHelper;
 			tv.setText(list.get(arg0).getResult());
 			return tv;
 		}
-		
+
 	}
-	
-	
+
+
 
 }
