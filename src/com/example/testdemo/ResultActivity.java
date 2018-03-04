@@ -170,7 +170,7 @@ import java.util.List;
 				int index = resultInfoList.get(i).getResult().indexOf(hello[0]);
 				int index2 = resultInfoList.get(i).getResult().indexOf(hello[1]);
 				// 存在匹配的数据
-				if (index != -1 || index2!= -1) {
+				if (index != -1 && index2!= -1) {
 					mSearchList.add(resultInfoList.get(i));
 				}
 			}

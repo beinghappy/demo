@@ -274,7 +274,8 @@ public class MainActivity extends Activity {
 				if (!toDelete && len == 1) {
 					String tmp = srcEditTextfilter1.getText().toString();
 					int choose = Integer.parseInt(tmp);
-					String head = getRandomIdNew(choose);
+//					String head = getRandomIdNew(choose);
+					String head = getRandomId(choose);
 					String text = head + head.substring(0, 6);
 					// srcEditTextfilter1.setText(text);
 					// srcEditTextfilter2.setText(text);
@@ -826,9 +827,9 @@ public class MainActivity extends Activity {
 			}
 		}
 
-		if(result[0]=='0'){
-			result[0] = '1';
-		}
+//		if(result[0]=='0'){
+			result[0] = 'O';
+//		}
 
 		Log.e("tag","result == "+result.toString());
 		return result;
