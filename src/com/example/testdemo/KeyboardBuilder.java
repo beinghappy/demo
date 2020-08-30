@@ -169,8 +169,7 @@ public class KeyboardBuilder {
 	
 	 
 	
-	//°ó¶¨Ò»¸öEditText
-	
+
 	public void registerEditText(EditText editText) {
 	
 	// Make the custom keyboard appear

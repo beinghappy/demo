@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +32,9 @@ import java.util.List;
  * @author 123
  *
  */
-@SuppressLint("NewApi") public class ResultActivity extends Activity implements
-		SearchView.OnQueryTextListener {
+@SuppressLint("NewApi")
+public class ResultActivity extends Activity implements
+        SearchView.OnQueryTextListener {
 
 	ListView mListView;
 	DBHelper mDbHelper;
@@ -233,17 +235,31 @@ import java.util.List;
 			return arg0;
 		}
 
-		@Override
-		public View getView(int arg0, View arg1, ViewGroup arg2) {
-			// TODO Auto-generated method stub
-			TextView tv = new TextView(context);
-			tv.setTextSize(20);
-			tv.setText(list.get(arg0).getResult());
-			return tv;
-		}
+        @Override
+        public View getView(int arg0, View convertView, ViewGroup arg2) {
+            // TODO Auto-generated method stub
+            ViewHolder holder = null;
+            LayoutInflater inflater = LayoutInflater.from(context);
+            if (convertView == null) {
+                holder = new ViewHolder();
+                convertView = inflater.inflate(
+                        R.layout.textview_item, null);
+                holder.tv = (TextView) convertView
+                        .findViewById(R.id.textView1);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.tv.setText(list.get(arg0).getResult());
+            return convertView;
+        }
 
-	}
+    }
 
+
+    public class ViewHolder {
+        private TextView tv;
+    }
 
 
 }
