@@ -1,5 +1,6 @@
 package com.example.testdemo.db;
 import android.content.Context;
+import android.database.Cursor;
 
 import com.example.testdemo.bean.ResultInfo;
 import com.lidroid.xutils.DbUtils;
@@ -38,7 +39,17 @@ public class DBHelper {
 			return false;
 		}
 	}
-	
+    public List<ResultInfo> getResultInfoHead() {
+        try {
+            List<ResultInfo> mList = mDbUtils.findAll(Selector.from(ResultInfo.class).orderBy("time", true));
+//			List<ResultInfo> mList = mDbUtils.findAll(ResultInfo.class);
+            return mList;
+        } catch (DbException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
 	/**
 	 * @return
 	 */
@@ -53,7 +64,30 @@ public class DBHelper {
 			return null;
 		}
 	}
-	
+
+    public Cursor getResultInfoCursor() {
+        try {
+            String sql = "select time as _id,time,result from user_table ORDER BY time";
+            Cursor cursor = mDbUtils.execQuery(sql);
+            return cursor;
+        } catch (DbException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Cursor getResultInfoCursor(String text) {
+        try {
+            String sql = "select time as _id,time,result from user_table WHERE result LIKE '%" + text + "%' ORDER BY time ";
+            Cursor cursor = mDbUtils.execQuery(sql);
+            return cursor;
+        } catch (DbException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
 	public boolean updateResult(ResultInfo mInfo){
 		try {
 			WhereBuilder mwhere = WhereBuilder.b("time", "=",

@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -36,12 +38,12 @@ import java.util.List;
 public class ResultActivity extends Activity implements
         SearchView.OnQueryTextListener {
 
-	ListView mListView;
-	DBHelper mDbHelper;
-	MyAdapter mAdapter;
-	List<ResultInfo> resultInfoList = null;
-	String account = null;
-	String ResultInfo = null;
+    ListView mListView;
+    DBHelper mDbHelper;
+    MyAdapter mAdapter;
+    List<ResultInfo> resultInfoList = new ArrayList<ResultInfo>();
+    String account = null;
+    String ResultInfo = null;
 
 	private SearchView srv1;
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +65,11 @@ public class ResultActivity extends Activity implements
 			}
 		});
 
-		mDbHelper = new DBHelper(this);
-		resultInfoList = mDbHelper.getResultInfos();
-		initListView(resultInfoList);
+        mDbHelper = new DBHelper(this);
+        resultInfoList = mDbHelper.getResultInfos();
+        initListView(resultInfoList);
+        Toast.makeText(getApplicationContext(),"数据量:"+resultInfoList.size(),Toast.LENGTH_LONG).show();
+
 
 	}
 
@@ -104,50 +108,80 @@ public class ResultActivity extends Activity implements
 		mBuilder.setView(mEditText);
 		mBuilder.setPositiveButton("确定", new OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface arg0, int id) {
-				// TODO Auto-generated method stub
-				if (TextUtils.isEmpty(mEditText.getText().toString())) {
-					Toast.makeText(getApplicationContext(), "修改不能为空",
-							Toast.LENGTH_LONG).show();
-				} else {
-					ResultInfo mInfo = new ResultInfo();
-					mInfo.setResult(mEditText.getText().toString());
-					mInfo.setTime(info.getTime());
-					boolean b = mDbHelper.updateResult(mInfo);
-					if (b) {
-						Toast.makeText(getApplicationContext(), "edit",
-								Toast.LENGTH_LONG).show();
-						resultInfoList = mDbHelper.getResultInfos();
-						List<ResultInfo> obj = searchItem(searchText);
-						initListView(obj);
+            @Override
+            public void onClick(DialogInterface arg0, int id) {
+                // TODO Auto-generated method stub
+                if (TextUtils.isEmpty(mEditText.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), "修改不能为空",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    info.setResult(mEditText.getText().toString());
+                    info.setTime(info.getTime());
+                    mAdapter.notifyDataSetInvalidated();
+                    updateItem(info);
+//                    boolean b = mDbHelper.updateResult(mInfo);
+//                    if (b) {
+//                        Toast.makeText(getApplicationContext(), "edit",
+//                                Toast.LENGTH_LONG).show();
+//                        resultInfoList = mDbHelper.getResultInfos();
+////                        List<ResultInfo> obj = searchItem(searchText);
+//                        initListView(resultInfoList);
+//
+////						mAdapter = new ArrayAdapter<String>(
+////								getApplicationContext(),
+////								R.layout.textview_item, dataList);
+////						mListView.setAdapter(mAdapter);
+//                    } else {
+//                        Toast.makeText(getApplicationContext(), "edit fail",
+//                                Toast.LENGTH_LONG).show();
+//                    }
+                }
+            }
+        });
+        mBuilder.setNegativeButton("取消", new OnClickListener() {
 
-//						mAdapter = new ArrayAdapter<String>(
-//								getApplicationContext(),
-//								R.layout.textview_item, dataList);
-//						mListView.setAdapter(mAdapter);
-					} else {
-						Toast.makeText(getApplicationContext(), "edit fail",
-								Toast.LENGTH_LONG).show();
-					}
-				}
-			}
-		});
-		mBuilder.setNegativeButton("取消", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                // TODO Auto-generated method stub
+                arg0.dismiss();
+            }
 
-			@Override
-			public void onClick(DialogInterface arg0, int arg1) {
-				// TODO Auto-generated method stub
-				arg0.dismiss();
-			}
+        });
+        mBuilder.show();
+    }
 
-		});
-		mBuilder.show();
-	}
+    private void updateItem(final ResultInfo mInfo){
+        ThreadPoolUtil.execute(new Runnable() {
+            @Override
+            public void run() {
+                boolean b = mDbHelper.updateResult(mInfo);
+                if (b) {
+//                    resultInfoList = mDbHelper.getResultInfos();
+                    handler.sendEmptyMessage(0);
+                } else {
+                    handler.sendEmptyMessage(1);
+                }
+            }
+        });
+    }
 
-	/**
-	 * 用户输入字符时激发该方法
-	 */
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 0){
+                Toast.makeText(getApplicationContext(), "edit",
+                        Toast.LENGTH_LONG).show();
+                initListView(resultInfoList);
+            }else if(msg.what == 1){
+                Toast.makeText(getApplicationContext(), "edit fail",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+    /**
+     * 用户输入字符时激发该方法
+     */
 
 	String searchText = "";
 	@Override
