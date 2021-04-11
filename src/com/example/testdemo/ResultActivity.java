@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -96,6 +97,15 @@ public class ResultActivity extends Activity implements
 				return false;
 			}
 		});
+
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(ResultActivity.this,ResultDetailActivity.class);
+				intent.putExtra("data", list.get(position));
+				startActivity(intent);
+			}
+		});
 	}
 
 	EditText mEditText;
@@ -119,22 +129,7 @@ public class ResultActivity extends Activity implements
                     info.setTime(info.getTime());
                     mAdapter.notifyDataSetInvalidated();
                     updateItem(info);
-//                    boolean b = mDbHelper.updateResult(mInfo);
-//                    if (b) {
-//                        Toast.makeText(getApplicationContext(), "edit",
-//                                Toast.LENGTH_LONG).show();
-//                        resultInfoList = mDbHelper.getResultInfos();
-////                        List<ResultInfo> obj = searchItem(searchText);
-//                        initListView(resultInfoList);
-//
-////						mAdapter = new ArrayAdapter<String>(
-////								getApplicationContext(),
-////								R.layout.textview_item, dataList);
-////						mListView.setAdapter(mAdapter);
-//                    } else {
-//                        Toast.makeText(getApplicationContext(), "edit fail",
-//                                Toast.LENGTH_LONG).show();
-//                    }
+
                 }
             }
         });
@@ -156,8 +151,8 @@ public class ResultActivity extends Activity implements
             public void run() {
                 boolean b = mDbHelper.updateResult(mInfo);
                 if (b) {
-//                    resultInfoList = mDbHelper.getResultInfos();
-                    handler.sendEmptyMessage(0);
+                	//edit之后保持搜索结果
+//                    handler.sendEmptyMessage(0);
                 } else {
                     handler.sendEmptyMessage(1);
                 }

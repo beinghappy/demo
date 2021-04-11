@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -36,12 +35,14 @@ public class MainActivity extends Activity {
 	EditText input3;
 	TextView srcTextViewresult1, srcTextViewresult2, srcTextViewresult3;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		getWindow().setSoftInputMode(
-				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    private static final String TAG = "MainActivity";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 		srcTextView1 = (EditText) findViewById(R.id.textView1);
 		srcTextView2 = (EditText) findViewById(R.id.textView2);
@@ -139,11 +140,14 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	private void initView() {
-		// TODO Auto-generated method stub
-		src1 = randomNumber(16);
-		src2 = randomNumber(16);
-		src3 = randomNumber(16);
+
+    private void initView() {
+        // TODO Auto-generated method stub
+        char[][] tmpdata = Tools.randomNumbers(16);
+
+        src1 = tmpdata[0];
+        src2 = tmpdata[1];
+        src3 = tmpdata[2];
 
 		srcTextView1.setText(new String(src1));
 		setHightColor(srcTextView1, 3, 4);
@@ -160,11 +164,7 @@ public class MainActivity extends Activity {
 
 		initList();
 
-		Log.e("tag--------", "third" + thirdList.toString());
-		Log.e("tag------", "sixList" + sixList.toString());
-		Log.e("tag--------", "eightList" + eightList.toString());
-
-		srcTextView1.addTextChangedListener(new TextWatcher() {
+        srcTextView1.addTextChangedListener(new TextWatcher() {
 
 			int tmplen = 0;
 			CharSequence tmpCharSequence = "";
@@ -178,14 +178,14 @@ public class MainActivity extends Activity {
 				doHightColor(len, tmplen, srcTextView1);
 			}
 
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
-				tmplen = s.length();
-				tmpCharSequence = s;
-				Log.e("tag", "before == " + s);
-			}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                // TODO Auto-generated method stub
+                tmplen = s.length();
+                tmpCharSequence = s;
+                Log.e("tag", "srcTextView1 before == " + s);
+            }
 
 			@Override
 			public void afterTextChanged(Editable s) {
@@ -208,14 +208,14 @@ public class MainActivity extends Activity {
 				doHightColor(len, tmplen, srcTextView2);
 			}
 
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
-				tmplen = s.length();
-				tmpCharSequence = s;
-				Log.e("tag", "before == " + s);
-			}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                // TODO Auto-generated method stub
+                tmplen = s.length();
+                tmpCharSequence = s;
+                Log.e("tag", "srcTextView2 before == " + s);
+            }
 
 			@Override
 			public void afterTextChanged(Editable s) {
@@ -237,14 +237,14 @@ public class MainActivity extends Activity {
 				doHightColor(len, tmplen, srcTextView3);
 			}
 
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
-				tmplen = s.length();
-				tmpCharSequence = s;
-				Log.e("tag", "before == " + s);
-			}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                // TODO Auto-generated method stub
+                tmplen = s.length();
+                tmpCharSequence = s;
+                Log.e("tag", "srcTextView3 before == " + s);
+            }
 
 			@Override
 			public void afterTextChanged(Editable s) {
@@ -263,35 +263,34 @@ public class MainActivity extends Activity {
 			// 关标
 			int startIndex = 0;
 
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				// TODO Auto-generated method stub
-				Log.i("tag", "输入文字==" + s);
-				Log.i("tag", "输入  start" + start);
-				int len = s.toString().length();
-				// add it on 20170106
-				if (!toDelete && len == 1) {
-					String tmp = srcEditTextfilter1.getText().toString();
-					int choose = Integer.parseInt(tmp);
-//					String head = getRandomIdNew(choose);
-					String head = getRandomId(choose);
-					String text = head + head.substring(0, 6);
-					// srcEditTextfilter1.setText(text);
-					// srcEditTextfilter2.setText(text);
-					// srcEditTextfilter3.setText(text);
-
-					String check1 = srcTextView1.getText().toString()
-							.substring(0, 1);
-					String check2 = srcTextView2.getText().toString()
-							.substring(0, 1);
-					String check3 = srcTextView3.getText().toString()
-							.substring(0, 1);
-
-					List<String> checkList = new ArrayList<String>();
-					checkList.add(check1);
-					checkList.add(check2);
-					checkList.add(check3);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+                // TODO Auto-generated method stub
+                Log.i("tag", "输入文字==" + s);
+                Log.i("tag", "输入  start" + start);
+                int len = s.toString().length();
+                // add it on 20170106
+                if (!toDelete && len == 1) {
+                    String tmp = srcEditTextfilter1.getText().toString();
+                    //fliter1输入的第一个数字
+                    int choose = Integer.parseInt(tmp);
+                    String head = getRandomId(choose);
+                    String text = head + head.substring(0, 6);
+                    Log.e(TAG, "生成的fliter1的text : " + text);
+                    String check1 = srcTextView1.getText().toString()
+                            .substring(0, 1);
+                    String check2 = srcTextView2.getText().toString()
+                            .substring(0, 1);
+                    String check3 = srcTextView3.getText().toString()
+                            .substring(0, 1);
+                    Log.e(TAG, "check1 : " + check1);
+                    Log.e(TAG, "check2 : " + check2);
+                    Log.e(TAG, "check3 : " + check3);
+                    List<String> checkList = new ArrayList<String>();
+                    checkList.add(check1);
+                    checkList.add(check2);
+                    checkList.add(check3);
 
 					if (!tmp.isEmpty()) {
 						if (checkList.contains(tmp)) {
@@ -309,7 +308,8 @@ public class MainActivity extends Activity {
 								}
 							}
 
-							doResultDirect();
+                            doResultDirect();
+                            generateOtherNineRecord(choose);
 
 						} else {
 							srcEditTextfilter1.setText(text);
@@ -485,9 +485,129 @@ public class MainActivity extends Activity {
 			public void afterTextChanged(Editable s) {
 				// TODO Auto-generated method stub
 
-			}
-		});
-	}
+            }
+        });
+    }
+
+    //add on 2021-4-8  for one click ten records
+    private final static int RECORD_NUM = 39;
+
+    public void generateOtherNineRecord(int originNum) {
+        List<ResultInfo> list = new ArrayList<>();
+        char[] str_flag1 = src1;
+        char[] str_flag2 = src2;
+        char[] str_flag3 = src3;
+
+        //第一区域首字
+        String check1 = String.valueOf(str_flag1[0]);
+        String check2 = String.valueOf(str_flag2[0]);
+        String check3 = String.valueOf(str_flag3[0]);
+
+        List<String> checkList = new ArrayList<String>();
+        checkList.add(check1);
+        checkList.add(check2);
+        checkList.add(check3);
+
+        Log.e(TAG, "generateOtherNineRecord: str_flag1==" + String.valueOf(str_flag1));
+        Log.e(TAG, "generateOtherNineRecord: str_flag2==" + String.valueOf(str_flag2));
+        Log.e(TAG, "generateOtherNineRecord: str_flag3==" + String.valueOf(str_flag3));
+
+        for (int k = 0; k < RECORD_NUM; k++) {
+            Log.e(TAG, "generateOtherNineRecord: choose ==========================");
+            //radmon generate a tmp to get more numbers
+            int tmpIndex = k % 3;
+            String tmp = checkList.get(tmpIndex);
+            Log.e(TAG, "generateOtherNineRecord: tmpIndex ==" + tmpIndex + ", tmp == " + tmp);
+            String head = getRandomId(Integer.parseInt(tmp));
+            String text = head + head.substring(0, 6);
+            Log.e(TAG, "generateOtherNineRecord: head == " + head);
+            Log.e(TAG, "generateOtherNineRecord: text == " + text);
+            if (checkList.contains(tmp)) {
+                //第二区域，过滤的，可输入的
+                String strfilter1 = text;
+                String strfilter2 = text;
+                String strfilter3 = text;
+
+                for (int i = 0; i < checkList.size(); i++) {
+                    int index = head.indexOf(checkList.get(i));
+                    if (i == 0) {
+                        String head1 = head.substring(index, 10)
+                                + head.substring(0, index);
+                        strfilter1 = head1 + head1.substring(0, 6);;
+                        Log.e(TAG, "generateOtherNineRecord: head1  ==  " + head1);
+                        Log.e(TAG, "generateOtherNineRecord: strfilter1  ==  " + strfilter1);
+                    }else if(i == 1){
+                        String head2 = head.substring(index, 10)
+                                + head.substring(0, index);
+                        strfilter2 = head2 + head2.substring(0, 6);
+                        Log.e(TAG, "generateOtherNineRecord: head2==" + head2);
+                        Log.e(TAG, "generateOtherNineRecord: strfilter2  ==  " + strfilter2);
+                    }else{
+                        String head3 = head.substring(index, 10)
+                                + head.substring(0, index);
+                        strfilter3 = head3 + head3.substring(0, 6);
+                        Log.e(TAG, "generateOtherNineRecord: strfilter3==" + strfilter3);
+                        Log.e(TAG, "generateOtherNineRecord: head3==" + head3);
+                    }
+                }
+
+                char[] filter1 = getResulString(strfilter1.toCharArray());
+                char[] filter2 = getResulString(strfilter2.toCharArray());
+                char[] filter3 = getResulString(strfilter3.toCharArray());
+                String[] filterTmp = dealresult(filter1, filter2, filter3);
+
+
+                String input1 = "";
+                String input2 = "";
+                String input3 = "";
+
+                if (strfilter1.length() >= 10) {
+                    input1 = strfilter1.substring(9, 10);
+                }
+
+                if (strfilter2.length() >= 10) {
+                    input2 = strfilter2
+                            .substring(9, 10);
+                }
+
+                if (strfilter3.length() >= 10) {
+                    input3 = strfilter3
+                            .substring(9, 10);
+                }
+
+                String inputStr1 = input1.isEmpty() ? "" : "," + input1;
+                String inputStr2 = input2.isEmpty() ? "" : "," + input2;
+                String inputStr3 = input3.isEmpty() ? "" : "," + input3;
+
+                String result = filterTmp[0] + inputStr1 + ";\n"
+                        + filterTmp[1] + inputStr2 + ";\n"
+                        + filterTmp[2] + inputStr3;
+
+                ResultInfo mResultInfo = new ResultInfo();
+                mResultInfo.setResult(result);
+                mResultInfo.setFlag1(String.valueOf(str_flag1));
+                mResultInfo.setFlag2(String.valueOf(str_flag2));
+                mResultInfo.setFlag3(String.valueOf(str_flag3));
+                mResultInfo.setFliter1(strfilter1);
+                mResultInfo.setFliter2(strfilter2);
+                mResultInfo.setFliter3(strfilter3);
+                mResultInfo.setResult1(filterTmp[0]);
+                mResultInfo.setResult2(filterTmp[1]);
+                mResultInfo.setResult3(filterTmp[2]);
+                mResultInfo.setResult_input1(input1);
+                mResultInfo.setResult_input2(input2);
+                mResultInfo.setResult_input3(input3);
+                mResultInfo.setTime(System.currentTimeMillis());
+                Log.e(TAG, "generateOtherNineRecord: " + mResultInfo.toString());
+                list.add(mResultInfo);
+
+            }
+        }
+
+        boolean result = DBHelper.getInstance(this).addUserInfoList(list);
+        Log.e(TAG, "generateOtherNineRecord: " + result);
+
+    }
 
 	private String deal(String head) {
 		List<String> list = new ArrayList<String>();
@@ -540,121 +660,21 @@ public class MainActivity extends Activity {
 
 	}
 
-	public String getRandomIdNew(int choose) {
-		reflashList();
 
-
-		List<String> list = new ArrayList();
-
-		// 选出第三个，第八个
-		List<String> list3 = thirdList;
-		if (list3.contains(choose)) {
-			list3.remove(choose);
-		}
-		String third = "" ;
-		if(list3.size() > 0 ){
-			Collections.shuffle(list3);
-			third = list3.get(0);
-		}
-
-		
-//		List<String> list6 = sixList;
-//		if (list6.contains(choose)) {
-//			list6.remove(choose);
-//		}
-//		if (!TextUtils.isEmpty(third) && list6.contains(third)) {
-//			list6.remove(third);
-//		}
-//		String six = "" ;
-//		if(list6.size() > 0 ){
-//			Collections.shuffle(list6);
-//			six = list6.get(0);
-//		}
-		
-		List<String> list8 = eightList;
-		if (list8.contains(choose)) {
-			list8.remove(choose);
-		}
-		if (!TextUtils.isEmpty(third) && list8.contains(third)) {
-			list8.remove(third);
-		}
-//		if (!TextUtils.isEmpty(six) && list8.contains(six)) {
-//			list8.remove(six);
-//		}
-		
-		String eight = "" ;
-		if(list8.size() > 0 ){
-			Collections.shuffle(list8);
-			eight = list8.get(0);
-		}
-		for (int i = 0; i < 10; i++) {
-			if (i == choose || (!TextUtils.isEmpty(third) && i == Integer.parseInt(third))
-//					|| (!TextUtils.isEmpty(six)  && i == Integer.parseInt(six))
-					|| (!TextUtils.isEmpty(eight)  && i == Integer.parseInt(eight))
-					) {
-
-			} else {
-				list.add("" + i);
-			}
-
-		}
-
-		Log.e("tag---1---", list.toString());
-		Collections.shuffle(list);
-		list.add(0, choose + "");
-		if(!TextUtils.isEmpty(third)){
-			list.add(2, third);
-		}
-		
-//		if(!TextUtils.isEmpty(six)){
-//			list.add(5, six);
-//		}
-		
-		if(!TextUtils.isEmpty(eight)){
-			list.add(7, eight);
-		}
-		
-		
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < list.size(); i++) {
-			sb.append(list.get(i));
-		}
-		return sb.toString();
-
-	}
-
-	private void changeThird(List<String> data, List<String> third) {
-		String a = data.get(2);
-		if (!third.contains(a)) {
-			// 该head的第三个不是third里面的任意一个，需要再排列
-			for (int i = 0; i < data.size(); i++) {
-				if (data.get(i).equals(a)) {
-					// String change =
-				}
-
-			}
-		}
-
-	}
-
-	public void autoFill() {
-
-	}
-
-	public void doHightColor(int len, int beforeLen, EditText textView) {
-		if (len > beforeLen) {
-			// add
-			if (len == 10) {
-				setHightColor(textView, 3, 4);
-				setHightColor(textView, 7, 8);
-				setHightColor(textView, 9, 10);
-			} else if (len == 8) {
-				setHightColor(textView, 3, 4);
-				setHightColor(textView, 7, 8);
-			} else if (len == 4) {
-				setHightColor(textView, 3, 4);
-			}
-			textView.setSelection(textView.length());
+    public void doHightColor(int len, int beforeLen, EditText textView) {
+        if (len > beforeLen) {
+            // add
+            if (len == 10) {
+                setHightColor(textView, 3, 4);
+                setHightColor(textView, 7, 8);
+                setHightColor(textView, 9, 10);
+            } else if (len == 8) {
+                setHightColor(textView, 3, 4);
+                setHightColor(textView, 7, 8);
+            } else if (len == 4) {
+                setHightColor(textView, 3, 4);
+            }
+            textView.setSelection(textView.length());
 
 		}
 	}
@@ -681,59 +701,6 @@ public class MainActivity extends Activity {
 		srcEditTextfilter1.setText("");
 	}
 
-	public void doResult() {
-		src1 = srcTextView1.getText().toString().toCharArray();
-		src2 = srcTextView2.getText().toString().toCharArray();
-		src3 = srcTextView3.getText().toString().toCharArray();
-		char[] filter1 = getResulString(srcEditTextfilter1.getText().toString()
-				.toCharArray());
-		char[] filter2 = getResulString(srcEditTextfilter2.getText().toString()
-				.toCharArray());
-		char[] filter3 = getResulString(srcEditTextfilter3.getText().toString()
-				.toCharArray());
-		String[] tmp = dealresult(filter1, filter2, filter3);
-		srcTextViewresult1.setText(tmp[0]);
-		srcTextViewresult2.setText(tmp[1]);
-		srcTextViewresult3.setText(tmp[2]);
-
-		if (!srcTextViewresult1.getText().toString().isEmpty()
-				&& !srcTextViewresult2.getText().toString().isEmpty()
-				&& !srcTextViewresult3.getText().toString().isEmpty()
-		// && !input1.getText().toString().isEmpty()
-		// && !input2.getText().toString().isEmpty()
-		// && !input3.getText().toString().isEmpty()
-		) {
-			// String result =
-			// srcTextViewresult1.getText().toString()+","+input1.getText().toString()+";\n"+
-			// srcTextViewresult2.getText().toString()+","+input2.getText().toString()+";\n"+
-			// srcTextViewresult3.getText().toString()+","+input3.getText().toString();
-			String inputStr1 = input1.getText().toString().isEmpty() ? "" : ","
-					+ input1.getText().toString();
-			String inputStr2 = input2.getText().toString().isEmpty() ? "" : ","
-					+ input2.getText().toString();
-			String inputStr3 = input3.getText().toString().isEmpty() ? "" : ","
-					+ input3.getText().toString();
-
-			String result = srcTextViewresult1.getText().toString() + inputStr1
-					+ ";\n" + srcTextViewresult2.getText().toString()
-					+ inputStr2 + ";\n"
-					+ srcTextViewresult3.getText().toString() + inputStr3;
-
-			ResultInfo mResultInfo = new ResultInfo();
-			mResultInfo.setResult(result);
-			mResultInfo.setTime(System.currentTimeMillis());
-			new DBHelper(this).addUserInfo(mResultInfo);
-
-			srcEditTextfilter3.setText("");
-			srcEditTextfilter2.setText("");
-			srcEditTextfilter1.setText("");
-
-		} else {
-			Toast.makeText(getApplicationContext(), "不能为空", Toast.LENGTH_LONG)
-					.show();
-		}
-
-	}
 
 	public void doResultDirect() {
 		src1 = srcTextView1.getText().toString().toCharArray();
@@ -768,15 +735,27 @@ public class MainActivity extends Activity {
 			String inputStr3 = input3.getText().toString().isEmpty() ? "" : ","
 					+ input3.getText().toString();
 
-			String result = srcTextViewresult1.getText().toString() + inputStr1
-					+ ";\n" + srcTextViewresult2.getText().toString()
-					+ inputStr2 + ";\n"
-					+ srcTextViewresult3.getText().toString() + inputStr3;
+            String result = srcTextViewresult1.getText().toString() + inputStr1
+                    + ";\n" + srcTextViewresult2.getText().toString()
+                    + inputStr2 + ";\n"
+                    + srcTextViewresult3.getText().toString() + inputStr3;
 
-			ResultInfo mResultInfo = new ResultInfo();
-			mResultInfo.setResult(result);
-			mResultInfo.setTime(System.currentTimeMillis());
-			new DBHelper(this).addUserInfo(mResultInfo);
+            ResultInfo mResultInfo = new ResultInfo();
+            mResultInfo.setResult(result);
+            mResultInfo.setFlag1(String.valueOf(src1));
+            mResultInfo.setFlag2(String.valueOf(src2));
+            mResultInfo.setFlag3(String.valueOf(src3));
+            mResultInfo.setFliter1(srcEditTextfilter1.getText().toString());
+            mResultInfo.setFliter2(srcEditTextfilter2.getText().toString());
+            mResultInfo.setFliter3(srcEditTextfilter3.getText().toString());
+            mResultInfo.setResult1(tmp[0]);
+            mResultInfo.setResult2(tmp[1]);
+            mResultInfo.setResult3(tmp[2]);
+            mResultInfo.setResult_input1(input1.getText().toString());
+            mResultInfo.setResult_input2(input2.getText().toString());
+            mResultInfo.setResult_input3(input3.getText().toString());
+            mResultInfo.setTime(System.currentTimeMillis());
+            DBHelper.getInstance(this).addUserInfo(mResultInfo);
 
 		} else {
 			Toast.makeText(getApplicationContext(), "不能为空", Toast.LENGTH_LONG)
@@ -791,71 +770,51 @@ public class MainActivity extends Activity {
 	List<String> sixList = new ArrayList<String>();
 	List<String> eightList = new ArrayList<String>();
 
-	public String getResult(char[] filter) {
-		char[] result = new char[filter.length];
-		for (int i = 0; i < filter.length; i++) {
-			if (filter[i] == src1[i] || filter[i] == src2[i]
-					|| filter[i] == src3[i]) {
-				result[i] = '0';
-			} else {
-				result[i] = '+';
-			}
-		}
+    /**
+     * fliter与flag对比，转化成0和+得到result
+     * @param filter
+     * @return
+     */
+    public char[] getResulString(char[] filter) {
+        char[] result = new char[filter.length];
+        for (int i = 0; i < filter.length; i++) {
+            if (filter[i] == src1[i] || filter[i] == src2[i]
+                    || filter[i] == src3[i]) {
+                result[i] = '0';
+            } else {
+                result[i] = '+';
+            }
+        }
+        result[0] = 'O';
+        Log.e("tag", "result == " + result.toString());
+        return result;
 
-		return new String(result);
-	}
+    }
 
-	public char[] getResulString(char[] filter) {
-		char[] result = new char[filter.length];
-		for (int i = 0; i < filter.length; i++) {
-			if (filter[i] == src1[i] || filter[i] == src2[i]
-					|| filter[i] == src3[i]) {
-				result[i] = '0';
-			} else {
-				// if(filter[i] != src1[i] && filter[i] != src2[i] && filter[i]
-				// == src3[i]){
-				// result[i]='8';
-				// }else if(filter[i] == src1[i] && filter[i] != src2[i] &&
-				// filter[i] != src3[i]){
-				// result[i]='8';
-				// }else if(filter[i] != src1[i] && filter[i] == src2[i] &&
-				// filter[i] != src3[i]){
-				// result[i]='8';
-				// }else{
-				result[i] = '+';
-				// }
-			}
-		}
-
-//		if(result[0]=='0'){
-			result[0] = 'O';
-//		}
-
-		Log.e("tag","result == "+result.toString());
-		return result;
-
-	}
-
-	public String[] dealresult(char[] filter1, char[] filter2, char[] filter3) {
-		Log.e("tag", "filter1==" + filter1.toString());
-		Log.e("tag", "filter2==" + filter2.toString());
-		Log.e("tag", "filter3==" + filter3.toString());
-		if (filter1.length == filter2.length
-				&& filter2.length == filter3.length) {
-			int len = filter1.length;
-			for (int i = 0; i < len; i++) {
-				int b1 = -1;
-				int b2 = -1;
-				int b3 = -1;
-				if (filter1[i] == '+') {
-					b1 = 1;
-				}
-				if (filter2[i] == '+') {
-					b2 = 1;
-				}
-				if (filter3[i] == '+') {
-					b3 = 1;
-				}
+    /**
+     * 将fliter全部转化为0,8，+
+     * @param filter1
+     * @param filter2
+     * @param filter3
+     * @return
+     */
+    public String[] dealresult(char[] filter1, char[] filter2, char[] filter3) {
+        if (filter1.length == filter2.length
+                && filter2.length == filter3.length) {
+            int len = filter1.length;
+            for (int i = 0; i < len; i++) {
+                int b1 = -1;
+                int b2 = -1;
+                int b3 = -1;
+                if (filter1[i] == '+') {
+                    b1 = 1;
+                }
+                if (filter2[i] == '+') {
+                    b2 = 1;
+                }
+                if (filter3[i] == '+') {
+                    b3 = 1;
+                }
 
 				if (b1 * b2 * b3 == -1) {
 					// 1一个,或者3 -1
@@ -880,15 +839,17 @@ public class MainActivity extends Activity {
 					}
 				}
 
-			}
-		}
-		String[] tmp = new String[3];
-		tmp[0] = new String(filter1);
-		tmp[1] = new String(filter2);
-		tmp[2] = new String(filter3);
-
-		return tmp;
-	}
+            }
+        }
+        String[] tmp = new String[3];
+        tmp[0] = new String(filter1);
+        tmp[1] = new String(filter2);
+        tmp[2] = new String(filter3);
+        Log.e(TAG, "dealresult filter1==" + tmp[0]);
+        Log.e(TAG, "dealresult filter2==" + tmp[1]);
+        Log.e(TAG, "dealresult filter3==" + tmp[2]);
+        return tmp;
+    }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -909,33 +870,5 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	public int[] generateNumber() {
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param length
-	 *            锟斤拷锟斤拷锟轿伙拷锟�
-	 * @return
-	 */
-	public char[] randomNumber(int length) {
-		char[] numbersAndLetters = null;
-		java.util.Random randGen = null;
-		if (length < 1) {
-			return null;
-		}
-		if (randGen == null) {
-			if (randGen == null) {
-				randGen = new java.util.Random();
-				numbersAndLetters = ("0123456789").toCharArray();
-			}
-		}
-		char[] randBuffer = new char[length];
-		for (int i = 0; i < randBuffer.length; i++) {
-			randBuffer[i] = numbersAndLetters[randGen.nextInt(10)];
-		}
-		return randBuffer;
-	}
 
 }
