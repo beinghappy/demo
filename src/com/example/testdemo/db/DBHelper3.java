@@ -9,36 +9,34 @@ import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class DBHelper {
+public class DBHelper3 {
 
-    public String name = "good_db3";
-    private int version = 1;
+	public String name = "good_db3";
+	private int version = 1;
 
-    DbUtils mDbUtils;
+	DbUtils mDbUtils;
 
-    //私有的静态变量
-    private volatile static DBHelper single = null;
+	//私有的静态变量
+	private volatile static DBHelper3 single = null;
 
-    private DBHelper() {
-    }
+	private DBHelper3() {}
 
-    //暴露的公有静态方法
-    public static DBHelper getInstance(Context context) {
-        if (single == null) {
-            synchronized (DBHelper.class) {
-                if (single == null) {  //第二层校验
-                    single = new DBHelper(context);
-                }
-            }
+	//暴露的公有静态方法
+	public static DBHelper3 getInstance(Context context) {
+	     if (single == null) {
+	          synchronized (DBHelper3.class) {
+	              if (single == null) {  //第二层校验
+	                  single = new DBHelper3(context);
+	              }
+	          }
 
 	     }
 	     return single;
 	}
 
-	public DBHelper(Context context) {
+	public DBHelper3(Context context) {
 		// TODO Auto-generated constructor stub
 		if (mDbUtils == null) {
 			mDbUtils = DbUtils.create(context, name, version,
@@ -88,23 +86,20 @@ public class DBHelper {
             return null;
         }
     }
-
-    /**
-     * @return
-     */
-    public List<ResultInfo> getResultInfos() {
-        List<ResultInfo> mList = new ArrayList<>();
-
-        try {
-            mList = mDbUtils.findAll(Selector.from(ResultInfo.class).orderBy("time", true));
+	/**
+	 * @return
+	 */
+	public List<ResultInfo> getResultInfos(){
+		try {
+			List<ResultInfo> mList = mDbUtils.findAll(Selector.from(ResultInfo.class).orderBy("time",true));
 //			List<ResultInfo> mList = mDbUtils.findAll(ResultInfo.class);
-            return mList;
-        } catch (DbException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
-        }
-    }
+			return mList;
+		} catch (DbException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
 
     public Cursor getResultInfoCursor() {
         try {

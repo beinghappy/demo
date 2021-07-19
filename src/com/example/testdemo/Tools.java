@@ -63,7 +63,7 @@ public class Tools {
     }
 
     /**
-     * @param length generate number
+     * @param length generate three number
      * @return
      */
     public static char[][] randomNumbers(int length) {
@@ -240,11 +240,11 @@ public class Tools {
                 }
 
                 if (b1 * b2 * b3 == -1) {
-                    // 1Ò»¸ö,»òÕß3 -1
+                    // 1ä¸€ä¸ª,æˆ–è€…3 -1
                     if (b1 == -1 && b2 == -1 && b3 == -1) {
 
                     } else {
-                        // 1¸ö
+                        // 1ä¸ª
                         if (b1 == -1) {
                             filter1[i] = '8';
                         }
@@ -256,9 +256,9 @@ public class Tools {
                         }
                     }
                 } else {
-                    // 2¸ö-1,»ò0 ¸ö
+                    // 2ä¸ª-1,æˆ–0 ä¸ª
                     if (b1 == 1 && b2 == 1 && b3 == 1) {
-                        // 0¸ö
+                        // 0ä¸ª
                     }
                 }
 

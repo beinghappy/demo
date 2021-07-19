@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,15 +30,16 @@ import com.example.testdemo.db.DBHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
- *
  * @author 123
- *
  */
 @SuppressLint("NewApi")
 public class ResultActivity extends Activity implements
         SearchView.OnQueryTextListener {
+
+    private static final String TAG = "ResultActivity";
 
     ListView mListView;
     DBHelper mDbHelper;
@@ -46,57 +48,60 @@ public class ResultActivity extends Activity implements
     String account = null;
     String ResultInfo = null;
 
-	private SearchView srv1;
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		setContentView(R.layout.address);
-		mListView = (ListView) findViewById(R.id.listView_address);
+    private SearchView srv1;
 
-		srv1 = (SearchView) findViewById(R.id.searchview);
-		srv1.setOnQueryTextListener(this);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
 
-		srv1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View view, boolean queryTextFocused) {
-				if(!queryTextFocused) {
-					srv1.setQuery("", false);
-				}
-			}
-		});
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        setContentView(R.layout.address);
+        mListView = (ListView) findViewById(R.id.listView_address);
+
+        srv1 = (SearchView) findViewById(R.id.searchview);
+        srv1.setOnQueryTextListener(this);
+
+        srv1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean queryTextFocused) {
+                if (!queryTextFocused) {
+                    srv1.setQuery("", false);
+                }
+            }
+        });
 
         mDbHelper = new DBHelper(this);
         resultInfoList = mDbHelper.getResultInfos();
         initListView(resultInfoList);
-        Toast.makeText(getApplicationContext(),"数据量:"+resultInfoList.size(),Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "数据量:" + resultInfoList.size(), Toast.LENGTH_LONG).show();
 
 
-	}
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	public void initListView(final List<ResultInfo> list){
-		mAdapter = new MyAdapter(this, list);
-		mListView.setAdapter(mAdapter);
-		mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+    public void initListView(final List<ResultInfo> list) {
+        mAdapter = new MyAdapter(this, list);
+        mListView.setAdapter(mAdapter);
+        mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
-			@Override
-			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-										   int arg2, long arg3) {
-				// TODO Auto-generated method stub
-				showEditDialog(list.get(arg2), arg2);
-				return false;
-			}
-		});
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                           int arg2, long arg3) {
+                // TODO Auto-generated method stub
+                showEditDialog(list.get(arg2), arg2);
+                return false;
+            }
+        });
 
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -163,11 +168,11 @@ public class ResultActivity extends Activity implements
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == 0){
+            if (msg.what == 0) {
                 Toast.makeText(getApplicationContext(), "edit",
                         Toast.LENGTH_LONG).show();
                 initListView(resultInfoList);
-            }else if(msg.what == 1){
+            } else if (msg.what == 1) {
                 Toast.makeText(getApplicationContext(), "edit fail",
                         Toast.LENGTH_LONG).show();
             }
@@ -178,24 +183,103 @@ public class ResultActivity extends Activity implements
      * 用户输入字符时激发该方法
      */
 
-	String searchText = "";
-	@Override
-	public boolean onQueryTextChange(String newText) {
-		List<ResultInfo> obj = searchItem(newText);
-		initListView(obj);
-		return false;
-	}
+    String searchText = "";
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+//        List<ResultInfo> obj = searchItem(newText);
+        Log.e(TAG,"query start ---------");
+        List<ResultInfo> obj = searchItemThree(newText.trim());
+        initListView(obj);
+        Log.e(TAG,"query end ---------");
+        return false;
+    }
+
+    private boolean find(String name, String target) {
+        String[] hello = name.split(" ");
+        int len = hello.length;
+        String regex = "";
+        for (int j = 0; j < len; j++) {
+            regex = regex + "(?=.*" + hello[j] + ")";
+        }
+        regex = regex + "^.*$";
+        System.out.println(regex);
+        return target.matches(regex);
+    }
+
+    public List<ResultInfo> searchItemThree(String name) {
+        searchText = name;
+        if (TextUtils.isEmpty(name)) {
+            return resultInfoList;
+        }
+
+        List<ResultInfo> mSearchList = new ArrayList<ResultInfo>();
+        String[] hello = new String[3];
+        if (name.indexOf(" ") > 0) {
+            // >1 word search
+            hello = name.split(" ");
+            int len = hello.length;
+            String regex = "";
+            for (int j = 0; j < len; j++) {
+                regex = regex + "(?=.*" + hello[j] + ")";
+            }
+
+            final String regexFind = regex + "^.*$";
+
+            int resultLen = resultInfoList.size();
+            Log.e(TAG, "searchItemThree: regexFind == " + regexFind);
+            for (int i = 0; i < resultLen; i++) {
+//                boolean isAdd = true;
+//                for (int j = 0; j < len; j++) {
+//                    int index = resultInfoList.get(i).getResult().indexOf(hello[j]);
+//                    if (index == -1) {
+//                        //只要有一个不满足，就不add
+//                        isAdd = false;
+//                        continue;
+//                    }
+//                }
+
+                Pattern p = Pattern.compile(regexFind,Pattern.DOTALL);
+                boolean isMatch = p.matcher(resultInfoList.get(i).getResult()).find();
+//                boolean isMatch = resultInfoList.get(i).getResult().matches(regexFind);
+//                Log.e(TAG, "searchItemThree: value ==" + resultInfoList.get(i).getResult() + "--------isMatch = " + isMatch);
+                if (isMatch) {
+                    mSearchList.add(resultInfoList.get(i));
+                }
+//                int index = resultInfoList.get(i).getResult().indexOf(hello[0]);
+//                int index2 = resultInfoList.get(i).getResult().indexOf(hello[1]);
+//                int index3 = resultInfoList.get(i).getResult().indexOf(hello[2]);
+//                // 存在匹配的数据
+//                if (index != -1 && index2 != -1 && index3 != -1) {
+//                    mSearchList.add(resultInfoList.get(i));
+//                }
+            }
+
+        } else {
+            // one word search
+            for (int i = 0; i < resultInfoList.size(); i++) {
+                int index = resultInfoList.get(i).getResult().indexOf(name);
+                // 存在匹配的数据
+                if (index != -1) {
+                    mSearchList.add(resultInfoList.get(i));
+                }
+            }
+        }
+
+        return mSearchList;
+    }
 
 
-	public List<ResultInfo> searchItem(String name) {
-		searchText = name;
-		if(TextUtils.isEmpty(name)){
-			return resultInfoList;
-		}
-		List<ResultInfo> mSearchList = new ArrayList<ResultInfo>();
-		String[] hello = new String[2];
-		if(name.trim().indexOf(" ") > 0){
-			hello = name.split(" ");
+    public List<ResultInfo> searchItem(String name) {
+
+        searchText = name;
+        if (TextUtils.isEmpty(name)) {
+            return resultInfoList;
+        }
+        List<ResultInfo> mSearchList = new ArrayList<ResultInfo>();
+        String[] hello = new String[2];
+        if (name.trim().indexOf(" ") > 0) {
+            hello = name.split(" ");
 
 			for (int i = 0; i < resultInfoList.size(); i++) {
 				int index = resultInfoList.get(i).getResult().indexOf(hello[0]);
@@ -238,13 +322,20 @@ public class ResultActivity extends Activity implements
 		}
 	}
 
-	class MyAdapter extends BaseAdapter{
-		private Context context;
-		private List<ResultInfo> list;
-		public MyAdapter(Context context , List<ResultInfo> list){
-			this.context = context;
-			this.list = list;
-		}
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+
+    class MyAdapter extends BaseAdapter {
+        private Context context;
+        private List<ResultInfo> list;
+
+        public MyAdapter(Context context, List<ResultInfo> list) {
+            this.context = context;
+            this.list = list;
+        }
 
 		@Override
 		public int getCount() {
