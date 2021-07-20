@@ -217,6 +217,12 @@ public class ResultActivity extends Activity implements
         String[] hello = new String[3];
         if (name.indexOf(" ") > 0) {
             // >1 word search
+            // deal + to \+
+            if(name.indexOf("+")>0){
+                Log.e(TAG, "searchItemThree: name 111== " + name);
+                name = name.replaceAll("\\+","\\\\+");
+            }
+            Log.e(TAG, "searchItemThree: name == " + name);
             hello = name.split(" ");
             int len = hello.length;
             String regex = "";
