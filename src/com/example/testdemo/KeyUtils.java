@@ -7,6 +7,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,15 +56,27 @@ public class KeyUtils {
      * @param keywords
      * @return
      */
-    public static SpannableStringBuilder  matcherSearchTitles(int color, String text, String[] keywords) {
-        SpannableStringBuilder spannable=new SpannableStringBuilder(text);
-        CharacterStyle span=null;
-        for(int i=0;i<keywords.length;i++){
-            Pattern pattern=Pattern.compile(keywords[i]);
-            Matcher matcher=pattern.matcher(text);
-            while(matcher.find()){
-                span=new ForegroundColorSpan(color);
-                spannable.setSpan(span,matcher.start(),matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    public static SpannableStringBuilder matcherSearchTitles(int color, String text, String[] keywords) {
+        SpannableStringBuilder spannable = new SpannableStringBuilder(text);
+        CharacterStyle span = null;
+
+        for (int i = 0; i < keywords.length; i++) {
+            String keyword = keywords[i];
+            if (keyword.indexOf("+") >= 0) {
+                Log.e("keyutils", "searchItemThree: name 111== " + keyword);
+                keyword = keyword.replaceAll("\\+", "\\\\+");
+            }
+            if (!TextUtils.isEmpty(keyword)) {
+                try {
+                    Pattern pattern = Pattern.compile(keyword);
+                    Matcher matcher = pattern.matcher(text);
+                    while (matcher.find()) {
+                        span = new ForegroundColorSpan(color);
+                        spannable.setSpan(span, matcher.start(), matcher.end(), Spannable.SPAN_MARK_MARK);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         return spannable;

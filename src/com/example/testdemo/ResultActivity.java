@@ -247,7 +247,7 @@ public class ResultActivity extends Activity implements
         if (name.indexOf(" ") > 0) {
             // >1 word search
             // deal + to \+
-            if(name.indexOf("+")>0){
+            if (name.indexOf("+") >= 0) {
                 Log.e(TAG, "searchItemThree: name 111== " + name);
                 name = name.replaceAll("\\+","\\\\+");
             }
