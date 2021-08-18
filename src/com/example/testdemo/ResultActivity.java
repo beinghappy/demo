@@ -7,9 +7,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -87,6 +89,31 @@ public class ResultActivity extends Activity implements
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void initListView(final List<ResultInfo> list, String[] keys) {
+        MyAdapter highAdapter = new MyAdapter(this, list, keys);
+        mListView.setAdapter(highAdapter);
+        mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                           int arg2, long arg3) {
+                // TODO Auto-generated method stub
+                showEditDialog(list.get(arg2), arg2);
+                return false;
+            }
+        });
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(ResultActivity.this, ResultDetailActivity.class);
+                intent.putExtra("data", list.get(position));
+                startActivity(intent);
+            }
+        });
+
     }
 
     public void initListView(final List<ResultInfo> list) {
@@ -188,10 +215,12 @@ public class ResultActivity extends Activity implements
     @Override
     public boolean onQueryTextChange(String newText) {
 //        List<ResultInfo> obj = searchItem(newText);
-        Log.e(TAG,"query start ---------");
-        List<ResultInfo> obj = searchItemThree(newText.trim());
-        initListView(obj);
-        Log.e(TAG,"query end ---------");
+        Log.e(TAG, "query start ---------");
+        String name = newText.trim();
+        List<ResultInfo> obj = searchItemThree(name);
+        String[] hello = name.split(" ");
+        initListView(obj, hello);
+        Log.e(TAG, "query end ---------");
         return false;
     }
 
@@ -337,17 +366,25 @@ public class ResultActivity extends Activity implements
     class MyAdapter extends BaseAdapter {
         private Context context;
         private List<ResultInfo> list;
+        private String[] mSsearchContent;
 
         public MyAdapter(Context context, List<ResultInfo> list) {
             this.context = context;
             this.list = list;
+            this.mSsearchContent = null;
         }
 
-		@Override
-		public int getCount() {
-			// TODO Auto-generated method stub
-			return list!=null ? list.size() : 0;
-		}
+        public MyAdapter(Context context, List<ResultInfo> list, String[] searchContent) {
+            this.context = context;
+            this.list = list;
+            this.mSsearchContent = searchContent;
+        }
+
+        @Override
+        public int getCount() {
+            // TODO Auto-generated method stub
+            return list != null ? list.size() : 0;
+        }
 
 		@Override
 		public ResultInfo getItem(int arg0) {
@@ -376,7 +413,12 @@ public class ResultActivity extends Activity implements
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            holder.tv.setText(list.get(arg0).getResult());
+            if (mSsearchContent != null && mSsearchContent.length > 0) {
+                SpannableStringBuilder number = KeyUtils.matcherSearchTitles(Color.parseColor("#ff9314"), list.get(arg0).getResult(), mSsearchContent);
+                holder.tv.setText(number);
+            } else {
+                holder.tv.setText(list.get(arg0).getResult());
+            }
             return convertView;
         }
 
